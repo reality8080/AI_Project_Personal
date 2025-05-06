@@ -6,13 +6,13 @@ Trạng thái ban đầu (Initial State): Ma trận 3x3.
 Tập hợp hành động (Actions): Di chuyển ô trống theo bốn hướng (trái, phải, lên, xuống).
 Hàm kế tiếp (Transition Function): Khi thực hiện một hành động (di chuyển ô trống), trạng thái mới được tạo ra.
 Trạng thái Mục tiêu (Goal State): Sắp xếp các ô số đúng thứ tự (thường là từ 1 đến 8 với ô trống ở cuối).
+Các thuật toán trong Tìm kiếm không có thông tin
+- Breadth-First Search
+- Depth-First Search
+- Uniform Cost Search
+- Iterative Deepening Depth-First Search
 
-### Breadth-First Search
-### Depth-First Search
-### Uniform Cost Search
-### Iterative Deepening Depth-First Search
 Hình ảnh gif của từng thuật toán áp dụng lên trò chơi
-
 Hình ảnh so sánh hiệu suất của các thuật toán
 Một vài nhận xét về hiệu suất của các thuật toán trong nhóm này khi áp dụng lên trò chơi 8 ô chữ (nếu có)
 ## 2.2. Các thuật toán Tìm kiếm có thông tin
