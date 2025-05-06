@@ -25,6 +25,8 @@ Các thuật toán trong Tìm kiếm không có thông tin
 
     <img src="animations/puzzle_animation_ID.gif" alt="BFS" width="200">
 
+So sánh thời gian chạy của các thuật toán
+
 ![So sánh các thời gian chạy của các thuật toán tìm kiếm](PNG/SoSanhUninformed.png)
 
 Một vài nhận xét về hiệu suất của các thuật toán trong nhóm này khi áp dụng lên trò chơi 8 ô chữ (nếu có)
