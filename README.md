@@ -1,0 +1,36 @@
+# 1. Mục tiêu
+
+# 2. Nội dung
+
+## 2.1. Các thuật toán Tìm kiếm không có thông tin
+Trình bày các thành phần chính của bài toán tìm kiếm là gì? Và solution là gì?
+Hình ảnh gif của từng thuật toán áp dụng lên trò chơi
+Hình ảnh so sánh hiệu suất của các thuật toán
+Một vài nhận xét về hiệu suất của các thuật toán trong nhóm này khi áp dụng lên trò chơi 8 ô chữ (nếu có)
+## 2.2. Các thuật toán Tìm kiếm có thông tin
+Trình bày các thành phần chính của bài toán tìm kiếm là gì? Và solution là gì?
+Hình ảnh gif của từng thuật toán áp dụng lên trò chơi
+Hình ảnh so sánh hiệu suất của các thuật toán
+Một vài nhận xét về hiệu suất của các thuật toán trong nhóm này khi áp dụng lên trò chơi 8 ô chữ (nếu có)
+## 2.3. Các thuật toán Tìm kiếm cục bộ
+Trình bày các thành phần chính của bài toán tìm kiếm là gì? Và solution là gì?
+Hình ảnh gif của từng thuật toán áp dụng lên trò chơi
+Hình ảnh so sánh hiệu suất của các thuật toán
+Một vài nhận xét về hiệu suất của các thuật toán trong nhóm này khi áp dụng lên trò chơi 8 ô chữ (nếu có)
+## 2.4. Các thuật toán Tìm kiếm trong môi trường phức tạp
+Trình bày các thành phần chính của bài toán tìm kiếm là gì? Và solution là gì?
+Hình ảnh gif của từng thuật toán áp dụng lên trò chơi
+Hình ảnh so sánh hiệu suất của các thuật toán
+Một vài nhận xét về hiệu suất của các thuật toán trong nhóm này khi áp dụng lên trò chơi 8 ô chữ (nếu có)
+## 2.5. Các thuật toán Tìm kiếm có ràng buộc
+Trình bày các thành phần chính của bài toán tìm kiếm là gì? Và solution là gì?
+Hình ảnh gif của từng thuật toán áp dụng lên trò chơi
+Hình ảnh so sánh hiệu suất của các thuật toán
+Một vài nhận xét về hiệu suất của các thuật toán trong nhóm này khi áp dụng lên trò chơi 8 ô chữ (nếu có)
+## 2.6. Các thuật toán học tăng cường
+Trình bày các thành phần chính của bài toán tìm kiếm là gì? Và solution là gì?
+Hình ảnh gif của từng thuật toán áp dụng lên trò chơi
+Hình ảnh so sánh hiệu suất của các thuật toán
+Một vài nhận xét về hiệu suất của các thuật toán trong nhóm này khi áp dụng lên trò chơi 8 ô chữ (nếu có)
+## 3. Kết luận
+Trình bày một số kết quả đạt đực trong project
