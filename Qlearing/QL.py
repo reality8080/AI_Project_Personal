@@ -123,7 +123,7 @@ def trainAstar(initial_state: np.ndarray = None):
         if episode % 1000 == 0:
             print(f"Episode {episode} completed")
             
-def solve(initialState: np.ndarray):
+def solve(initialState: np.ndarray,qTable):
     """Giải bài toán từ trạng thái ban đầu, dùng Q-Table hoặc A*."""
     state = initialState.copy()
     steps = []
@@ -134,7 +134,7 @@ def solve(initialState: np.ndarray):
             astar_steps = solve_with_astar(state)
             if not astar_steps:
                 print("Không tìm được đường đi!")
-                return steps
+                return len(qTable),steps
             steps.extend(astar_steps)
             break  # Thoát sau khi dùng A*
         
@@ -146,7 +146,7 @@ def solve(initialState: np.ndarray):
             astar_steps = solve_with_astar(state)
             if not astar_steps:
                 print("Không tìm được đường đi!")
-                return steps
+                return len(qTable),steps
             steps.extend(astar_steps)
             break
         

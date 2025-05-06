@@ -103,5 +103,5 @@ def solve_csp_8puzzle():
     else:
         print("Không có lời giải")
 
-# if __name__ == "__main__":
-#     solve_csp_8puzzle()
+if __name__ == "__main__":
+    solve_csp_8puzzle()

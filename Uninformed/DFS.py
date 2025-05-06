@@ -1,104 +1,95 @@
 import numpy as np
-# import collections
-import timeit
-# import queue
 from collections import deque
-# import heapq
-# import itertools
 
-# counter=itertools.count()
-#BFS dùng manhattan
+# def is_solvable(start, end):
+#     start_flat = start.flatten()
+#     end_flat = end.flatten()
+#     # Đếm số hoán vị (inversions) của start và end (bỏ qua số 0)
+#     inv_start = sum(1 for i in range(8) for j in range(i+1, 9) if start_flat[i] != 0 and start_flat[j] != 0 and start_flat[i] > start_flat[j])
+#     inv_end = sum(1 for i in range(8) for j in range(i+1, 9) if end_flat[i] != 0 and end_flat[j] != 0 and end_flat[i] > end_flat[j])
+#     # Với lưới 3x3, tổng số hoán vị của start và end phải cùng chẵn/lẻ
+#     return (inv_start % 2) == (inv_end % 2)
 
+def actionHq(state: np.ndarray):
+    row, col = np.argwhere(state == 0)[0]
+    next_states = []
+    moves = [(-1, 0, "Up"), (1, 0, "Down"), (0, -1, "Left"), (0, 1, "Right")]
 
-def actionHq(state):
-    # next=[]
-    row,col=np.argwhere(state==0)[0]
+    for dr, dc, move in moves:
+        new_row, new_col = row + dr, col + dc
+        if 0 <= new_row < 3 and 0 <= new_col < 3:
+            new_state = state.copy()
+            new_state[row, col], new_state[new_row, new_col] = new_state[new_row, new_col], new_state[row, col]
+            next_states.append((new_state, move))
+    return next_states
+
+def DFS(start: np.ndarray, end: np.ndarray):
+    # if not is_solvable(start, end):
+    #     return 0, None  # Không có lời giải
     
-    nextState=[]
-    
-    moves=[
-        (-1,0,"Up"),
-        (0,-1,"Down"),
-        (1,0,"Left"),
-        (0,1,"Right")
-    ]
+    stack = deque()
+    visited = set()
+    start_tuple = tuple(start.flatten())
+    end_tuple = tuple(end.flatten())
+    nodes_explored = 0
 
-    for dr,dc,Moves in moves:
-        newRow=dr+row
-        newCol=dc+col
-        if (0<=newRow<3) and (0<=newCol<3):
-            newState=state.copy()
-            newState[row,col], newState[newRow,newCol]=newState[newRow,newCol],newState[row,col]
-            nextState.append((newState,Moves))
-    return nextState
+    # Lưu: (trạng thái, danh sách hành động)
+    stack.append((start_tuple, []))
 
-def DFS(start,end,maxDepth):
-    stack=deque()
-    visited=set()
-    startTuple=tuple(start.flatten())
-    endTuple=tuple(end.flatten())
-    nodesExplored = 0
-    
-    stack.append((start,[],0))
-    visited.add(startTuple)
     while stack:
-        state, path,depth=stack.pop()
-        nodesExplored+=1
-        
-        if tuple(state.flatten()) == endTuple:
-            return nodesExplored, path,None
-        
-        if depth>=maxDepth:
+        state_tuple, actions = stack.pop()
+        nodes_explored += 1
+
+        if state_tuple == end_tuple:
+            return nodes_explored, actions
+        if state_tuple in visited:
             continue
-        
-        # if stateTuple not in visited:
-        #     i+=1
-        #     visited.add(stateTuple)
-        for nextState,move in actionHq(state):
-            nextTuple=tuple(nextState.flatten())
-            if nextTuple not in visited:
-                visited.add(nextTuple)
-                stack.append((nextTuple,path+[nextTuple],depth+1))
-    return nodesExplored, None
+        visited.add(state_tuple)
+        current_state = np.array(state_tuple).reshape(3, 3)
+        for next_state, move in actionHq(current_state):
+            next_tuple = tuple(next_state.flatten())
+            if next_tuple not in visited:
+                # visited.add(next_tuple)
+                stack.append((next_tuple, actions + [move]))
+    
+    return nodes_explored, None
 
-# def ID(start,end):
-#     cost=0
-#     stack=deque()
-#     visited=set()
-#     startTuple=tuple(start.flatten())
-#     endTuple=tuple(end.flatten())
+def reconstruct_path(start, actions):
+    """Tái tạo đường đi từ danh sách hành động."""
+    path = [start]
+    current = start.copy()
+    for move in actions:
+        row, col = np.argwhere(current == 0)[0]
+        if move == "Up":
+            new_row, new_col = row - 1, col
+        elif move == "Down":
+            new_row, new_col = row + 1, col
+        elif move == "Left":
+            new_row, new_col = row, col - 1
+        elif move == "Right":
+            new_row, new_col = row, col + 1
+        current[row, col], current[new_row, new_col] = current[new_row, new_col], current[row, col]
+        path.append(current.copy())
+    return path
 
-#     stack.append((0,startTuple,[startTuple]))
-#     while stack:
-#         c,stateTuple, path=stack.pop()
-
-#         if c>cost:
-#             c=0
-#             stack.clear()
-#             stack.append((c,startTuple,[startTuple]))
-#             cost+=1
-#         if stateTuple==endTuple:
-#             return path
-        
-#         if stateTuple not in visited:
-#             visited.add(stateTuple)
-#             for nextState in actionHq(np.array(stateTuple).reshape((3,3))):
-#                 nextTuple=tuple(nextState.flatten())
-#                 if nextTuple not in visited:
-#                     stack.appendleft((cost+1,nextTuple,path+[nextTuple]))
-#     return None
-
-
-
-if __name__=='__main__':
-    start=np.array([
-        [2,6,5],
-        [0,8,7],
-        [4,3,1]
+if __name__ == '__main__':
+    start = np.array([
+        [8, 1, 3],
+        [0, 2, 4],
+        [7, 6, 5]
     ])
+    # board=start.copy()
     end=np.array([
-        [1,2,3],
-        [4,5,6],
-        [7,8,0]
+    [1, 2, 3],
+    [8, 0, 4],
+    [7, 6, 5]
     ])
-    print(timeit.timeit(lambda: DFS(start,end),number=5))
+    
+    nodes, actions = DFS(start, end)
+    if actions:
+        print(f"✅ Found solution with {len(actions)} steps. Nodes explored: {nodes}")
+        path = reconstruct_path(start, actions)
+        for step in path:
+            print(step, "\n")
+    else:
+        print("❌ No solution found.")

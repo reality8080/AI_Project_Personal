@@ -1,6 +1,21 @@
 import numpy as np
 import heapq
 
+def BeliefList(amount:int):
+    list=[]
+    while len(list) < amount:
+        board = randomArray()
+        if isSolvable(board):  # lọc chỉ lấy trạng thái giải được
+            list.append(board)
+    return list
+
+def isSolvable(state):
+    arr = state.flatten()
+    inv_count = sum(
+        1 for i in range(8) for j in range(i + 1, 9) if arr[i] and arr[j] and arr[i] > arr[j]
+    )
+    return inv_count % 2 == 0
+
 def manhattan(state,end):
     return np.sum(
         abs(r1-r2)+abs(c1-c2)
@@ -38,7 +53,8 @@ def BeliefList(amout:int):
 # Hàm lấy giao chế độ
 def nextAction(listState):
     listAction=set()
-    moves=[(-1,0,'Left'),(0,-1,"Down"),(1,0,"Right"),(0,1,"Up")]
+    moves=moves=[(-1,0,'Up'), (1,0,'Down'), (0,-1,'Left'), (0,1,'Right')]
+
     for x in listState:
         row,col = np.argwhere(x==0)[0]
         for dr,dc, move in moves:
@@ -48,28 +64,29 @@ def nextAction(listState):
             if len(listAction)>=4:
                 return listAction
     return listAction
-   
-def movesAction(state:np.ndarray,move):
-    list1=[]
-    if move =='Left':
-        dr,dc=-1,0
-    elif move=='Right':
-        dr,dc=1,0
-    elif move=='Up':
-        dr,dc=0,-1
-    elif move=='Down':
-        dr,dc=0,1
+def movesAction(state:np.ndarray, move):
+    list1 = []
+    if move == 'Up':
+        dr, dc = -1, 0
+    elif move == 'Down':
+        dr, dc = 1, 0
+    elif move == 'Left':
+        dr, dc = 0, -1
+    elif move == 'Right':
+        dr, dc = 0, 1
+
     for U in state:
-        row,col = np.argwhere(U==0)[0]
-        newRow,newCol=row+dr,col+dc
-        UState=np.copy(U)
-        if (0<=newRow<3 and 0<=newCol<3):
-            UState[row,col],UState[newRow,newCol]=UState[newRow,newCol],UState[row,col]
+        row, col = np.argwhere(U == 0)[0]
+        newRow, newCol = row + dr, col + dc
+        if 0 <= newRow < 3 and 0 <= newCol < 3:
+            UState = np.copy(U)
+            UState[row, col], UState[newRow, newCol] = UState[newRow, newCol], UState[row, col]
             if not any(np.array_equal(UState, s) for s in list1):
                 list1.append(UState)
-        else:
-            list1.append(UState)
+        # Nếu di chuyển vượt biên thì bỏ qua (KHÔNG thêm UState)
+
     return list1
+
         
 def belief_to_tuple(belief):
     return tuple(tuple(state.flatten()) for state in belief)

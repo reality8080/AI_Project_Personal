@@ -5,7 +5,7 @@ def createBtn():
         "BFS",
         "DFS",
         "UCS",
-        "IDDFS",
+        "ID",
         "Greedy",
         "AStar",
         "IDAStar",

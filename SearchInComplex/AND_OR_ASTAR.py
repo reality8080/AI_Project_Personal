@@ -47,67 +47,65 @@ def hybridAStar_AND_OR(start:np.ndarray,end:np.ndarray):
                     
     return 0,None    
 
-def Astar(state,path,visited,end):
-    stateTuple=tuple(map(tuple,state))
-    if isGoal(state,end):
-        return [state],1.0
-    
+def Astar(state, path, visited, end, prob):
+    stateTuple = tuple(map(tuple, state))
+    if isGoal(state, end):
+        return [state], 1.0  # Đạt mục tiêu
+
     if stateTuple in visited:
-        return 0,None
-    visited.add(stateTuple)
-    
-    children=generateChildren(state)
-    
-    bestPath=None
-    bestProb=0
-    
-    for child,childProb in children:
-        result,resultProb=andNode(child,end,visited.copy(),path+[state], prob)
+        return None, 0  # Đã thăm
+
+    visited.add(stateTuple)  # Đánh dấu trạng thái đã thăm
+    children = generateChildren(state)
+
+    bestPath = None
+    bestProb = 0
+
+    for child, childProb in children:
+        result, resultProb = andNode(child, end, visited, path + [state], prob)
         if result:
-            totalProb=childProb*resultProb
-            if totalProb>bestProb:
-                bestPath=[state]+result
-                bestProb=totalProb
-    return bestProb,bestPath
+            totalProb = childProb * resultProb
+            if totalProb > bestProb:
+                bestPath = [state] + result
+                bestProb = totalProb
 
-def andNode(state,end,visited,path,actionProb):
-    return Astar(state,end,visited.copy(),path)
+    return bestPath, bestProb
 
+def andNode(state, end, visited, path, prob):
+    return Astar(state, path, visited.copy(), end, prob)
 def generateChildren(state):
-    children=[]
-    row,col=np.argwhere(state==0)[0]
-    moves=[
-        ((-1, 0), 0.25),
-        ((1, 0), 0.25),
-        ((0, -1), 0.25),
-        ((0, 1), 0.25)
-    ]
-    
-    jumps=[
-        ((-2, 0), 0.05),
-        ((2, 0), 0.05),
-        ((0, -2), 0.05),
-        ((0, 2), 0.05)        
+    children = []
+    row, col = np.argwhere(state == 0)[0]
+    moves = [
+        ((-1, 0), 0.25),  # Di chuyển lên
+        ((1, 0), 0.25),   # Di chuyển xuống
+        ((0, -1), 0.25),  # Di chuyển sang trái
+        ((0, 1), 0.25)    # Di chuyển sang phải
     ]
 
-    for (dr,dc),prob in moves+jumps:
-        newRow,newCol=row+dr,col+dc
-        if 0<=newRow<3 and 0<=newCol<3:
-            newState=np.copy(state)
-            newState[row,col],newState[newRow,newCol]=newState[newRow,newCol],newState[row,col]
-            children.append((newState,prob))
-            
+    jumps = [
+        ((-2, 0), 0.05),  # Nhảy 2 ô lên
+        ((2, 0), 0.05),   # Nhảy 2 ô xuống
+        ((0, -2), 0.05),  # Nhảy 2 ô sang trái
+        ((0, 2), 0.05)    # Nhảy 2 ô sang phải
+    ]
+
+    for (dr, dc), prob in moves + jumps:
+        newRow, newCol = row + dr, col + dc
+        if 0 <= newRow < 3 and 0 <= newCol < 3:
+            newState = np.copy(state)
+            newState[row, col], newState[newRow, newCol] = newState[newRow, newCol], newState[row, col]
+            children.append((newState, prob))
+
     return children
+
+def isComplexState(state, children):
+     return len(children) > 5 or sum(prob for _, prob in children) < 0.5
 
 def moveCost(state,child):
     r1,c1 = np.argwhere(state==0)[0]
     r2,c2 = np.argwhere(child==0)[0]
     return abs(r1-r2)+abs(c1-c2)
-
-
-
-def isComplexState(state,children):
-    return len(children)>4 or sum(prob for _,prob in children) < 0.6
 
 if __name__=="__main__":
     # start=np.array([
@@ -128,10 +126,9 @@ if __name__=="__main__":
         [7,8,0]
     ])
     
-    path, prob = hybridAStar_AND_OR(start, end)
+    spaceState, path = hybridAStar_AND_OR(start, end)
     
     if path:
-        print(f"Solution found with probability: {prob}")
         for i, state in enumerate(path):
             print(f"Step {i}:")
             print(state)
