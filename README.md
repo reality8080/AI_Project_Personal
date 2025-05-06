@@ -9,21 +9,23 @@ Hàm kế tiếp (Transition Function): Khi thực hiện một hành động (d
 Trạng thái Mục tiêu (Goal State): Sắp xếp các ô số đúng thứ tự (thường là từ 1 đến 8 với ô trống ở cuối).
 Các thuật toán trong Tìm kiếm không có thông tin
 - Breadth-First Search
-![Breadth-First Search GIF](//animations/puzzle_animation_BFS.gif)
+
+    <img src="animations/puzzle_animation_BFS.gif" alt="BFS" width="200">
 
 - Depth-First Search
 
-![Depth-First Search GIF](//animations/puzzle_animation_DFS.gif)
+    <img src="animations/puzzle_animation_DFS.gif" alt="BFS" width="200">
+
 
 - Uniform Cost Search
 
-![Uniform Cost Search GIF](//animations/puzzle_animation_UCS.gif)
+    <img src="animations/puzzle_animation_UCS.gif" alt="BFS" width="200">
 
 - Iterative Deepening Depth-First Search
 
-![Breadth-First Search GIF](//animations/puzzle_animation_ID.gif)
+    <img src="animations/puzzle_animation_ID.gif" alt="BFS" width="200">
 
-![So sánh các thời gian chạy của các thuật toán tìm kiếm](//PNG/SoSanhUninformed.png)
+![So sánh các thời gian chạy của các thuật toán tìm kiếm](PNG/SoSanhUninformed.png)
 
 Một vài nhận xét về hiệu suất của các thuật toán trong nhóm này khi áp dụng lên trò chơi 8 ô chữ (nếu có)
 ## 2.2. Các thuật toán Tìm kiếm có thông tin
