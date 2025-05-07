@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 plt.rcParams['font.family'] = 'Times New Roman'
 
 # Dữ liệu mới, thêm Genetic
-algorithms = ['BFS', 'DFS', 'UCS', 'IDDFS']
-times = [0.000273,0.011306,0.000411,0.000432]
+algorithms = ['A*', 'IDA*', 'Greedy']
+times = [0.001800,3.119444,0.013648]
 
 # Tạo biểu đồ
 plt.figure(figsize=(8, 5))
@@ -13,7 +13,7 @@ colors = ['#FF6F61', '#6BCB77', '#4D96FF', '#FFB74D', '#8E44AD', '#9B59B6']
 bars = plt.bar(algorithms, times, color=colors, edgecolor='black', width=0.6)
 
 # Tiêu đề và nhãn trục
-plt.title('So sánh thời gian thực hiện các thuật toán Uninformed Search', fontsize=16, fontweight='bold')
+plt.title('So sánh thời gian thực hiện các thuật toán Informed Search', fontsize=16, fontweight='bold')
 plt.xlabel('Thuật toán', fontsize=14)
 plt.ylabel('Thời gian (giây)', fontsize=14)
 
