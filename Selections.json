@@ -1,56 +1,20 @@
 [
     {
-        "algorithm": "AStar",
-        "execution_time": 3.1076357000019925,
-        "states_explored": 21197,
-        "path_length": 32
+        "algorithm": "NoOb",
+        "execution_time": 9.538158899988048,
+        "states_explored": 6671,
+        "path_length": 25
     },
     {
-        "algorithm": "IDAStar",
-        "execution_time": 3.2205484000005526,
-        "states_explored": 21197,
-        "path_length": 32
+        "algorithm": "NoOb",
+        "execution_time": 269.18783340003574,
+        "states_explored": 182903,
+        "path_length": 0
     },
     {
-        "algorithm": "Greedy",
-        "execution_time": 0.013773199996649055,
-        "states_explored": 92,
-        "path_length": 54
-    },
-    {
-        "algorithm": "SimpleHillClimbing",
-        "execution_time": 0.0017351000024063978,
-        "states_explored": 8,
-        "path_length": 8
-    },
-    {
-        "algorithm": "SHillClimbing",
-        "execution_time": 0.027854600000864593,
-        "states_explored": 166,
-        "path_length": 166
-    },
-    {
-        "algorithm": "RHillClimbing",
-        "execution_time": 0.01279910000084783,
-        "states_explored": 10,
-        "path_length": 10
-    },
-    {
-        "algorithm": "SimulatedAnne",
-        "execution_time": 0.04194730000017444,
-        "states_explored": 136,
-        "path_length": 136
-    },
-    {
-        "algorithm": "SimulatedAnne",
-        "execution_time": 0.0426437000023725,
-        "states_explored": 146,
-        "path_length": 146
-    },
-    {
-        "algorithm": "SimulatedAnne",
-        "execution_time": 0.041569699998945,
-        "states_explored": 133,
-        "path_length": 133
+        "algorithm": "NoOb",
+        "execution_time": 29.543565100000706,
+        "states_explored": 1712,
+        "path_length": 24
     }
 ]

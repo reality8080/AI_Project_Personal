@@ -13,7 +13,7 @@ actionToIdx = {action: idx for idx, action in enumerate(actions)}
 alpha = 0.1
 gamma = 0.9
 epsilon = 0.1
-episodes = 10000
+episodes = 100000
 maxSteps = 100
 
 def manhattan(state: np.ndarray, end: np.ndarray = GOALSTATE):
