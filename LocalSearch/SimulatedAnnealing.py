@@ -37,9 +37,9 @@ def search(start, goal):
         nextState = random.choice(neighbors)
         currentCost = Manhattan(state, goal)
         nextCost = Manhattan(nextState, goal)
-        deltaE = currentCost - nextCost
+        deltaE = nextCost - currentCost  # chỉnh hướng đúng
 
-        if deltaE > 0 or random.random() < np.exp(deltaE / T):
+        if deltaE < 0 or random.random() < np.exp(-deltaE / T):
             state = nextState.copy()
             path.append(state.copy())
             if nextCost < bestCost:
@@ -48,10 +48,14 @@ def search(start, goal):
 
         if np.array_equal(state, goal):
             print("Đã tìm được lời giải!")
-            break
+            for i, step in enumerate(path):
+                print(f"\nBước {i + 1}:\n{step}")
+            return steps, path, bestState, len(path)
 
         T *= a
 
+    print("Không tìm được lời giải. Trạng thái tốt nhất tìm được là:")
+    print(bestState)
     return steps, path, bestState, len(path)
 
 if __name__ == "__main__":
@@ -67,7 +71,4 @@ if __name__ == "__main__":
         [7, 8, 0]
     ])
     
-    steps, path, bestState, num_visited = search(start, end)
-
-    for i, step in enumerate(path):
-        print(f"\nBước {i + 1}:\n{step}")
+    steps, path, bestState, numVisited = search(start, end)

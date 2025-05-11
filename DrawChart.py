@@ -2,63 +2,90 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Cài font mặc định Times New Roman
 plt.rcParams['font.family'] = 'Times New Roman'
 
-# Đọc dữ liệu từ file JSON
 def read_log_data(filename):
     try:
         with open(filename, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-        return data
+            return json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
         print(f"Không thể đọc file {filename} hoặc file rỗng.")
         return []
 
-# Chuẩn bị dữ liệu cho biểu đồ
 data = read_log_data('Selections.json')
 
-# Lấy danh sách các thuật toán duy nhất và thời gian trung bình
-algorithm_times = {}
+# Tổng hợp dữ liệu
+metrics = {
+    'execution_time': {},
+    'states_explored': {},
+    'path_length': {}
+}
+
 for entry in data:
     algo = entry['algorithm']
-    time = entry['execution_time']
-    if algo in algorithm_times:
-        algorithm_times[algo].append(time)
+    for key in metrics:
+        value = entry.get(key)
+        if value is not None:
+            metrics[key].setdefault(algo, []).append(value)
+
+algorithms = sorted(set(algo for metric_data in metrics.values() for algo in metric_data))
+x = np.arange(len(algorithms))
+
+# Tính trung bình
+avg_metrics = {
+    metric: [np.mean(metrics[metric].get(algo, [0])) for algo in algorithms]
+    for metric in metrics
+}
+
+# Bắt đầu vẽ
+fig, ax1 = plt.subplots(figsize=(12, 6))
+
+# Màu sắc và độ rộng
+width = 0.35
+color_time = '#FF6F61'
+color_path = '#2ECC71'
+color_states = '#4D96FF'
+
+# Trục trái: thời gian và path_length
+bars1 = ax1.bar(x - width/2, avg_metrics['execution_time'], width=width, label='Thời gian (giây)', color=color_time)
+bars2 = ax1.bar(x + width/2, avg_metrics['path_length'], width=width, label='Độ dài đường đi', color=color_path)
+
+ax1.set_ylabel('Thời gian (s) / Độ dài đường đi', fontsize=12)
+ax1.set_xlabel('Thuật toán', fontsize=12)
+ax1.set_xticks(x)
+ax1.set_xticklabels(algorithms, rotation=45, ha='right')
+ax1.grid(axis='y', linestyle='--', alpha=0.5)
+
+# Trục phải: trạng thái duyệt
+ax2 = ax1.twinx()
+line = ax2.plot(x, avg_metrics['states_explored'], color=color_states, marker='o',
+                label='Số trạng thái duyệt', linewidth=2)
+ax2.set_ylabel('Số trạng thái duyệt', fontsize=12)
+ax2.tick_params(axis='y')
+
+# Hiển thị nhãn trên cột THỜI GIAN
+for bar in bars1:
+    value = bar.get_height()
+    if value < 0.001:
+        label = f'{value:.4f}'
+    elif value < 1:
+        label = f'{value:.3f}'
     else:
-        algorithm_times[algo] = [time]
+        label = f'{value:.2f}'
+    ax1.text(bar.get_x() + bar.get_width()/2, value + 0.00005,
+             label, ha='center', fontsize=9)
 
-# Tính thời gian trung bình cho mỗi thuật toán
-algorithms = list(algorithm_times.keys())
-times = [np.mean(algorithm_times[algo]) for algo in algorithms]
+# Hiển thị nhãn trên cột ĐỘ DÀI ĐƯỜNG ĐI
+for bar in bars2:
+    ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.001,
+             f'{bar.get_height():.0f}', ha='center', fontsize=9)
 
-# Tạo biểu đồ
-plt.figure(figsize=(10, 6))
-colors = ['#FF6F61', '#6BCB77', '#4D96FF', '#FFB74D', '#8E44AD', '#9B59B6', '#E74C3C', '#3498DB', '#2ECC71', '#F1C40F', '#E67E22', '#1ABC9C']
-bars = plt.bar(algorithms, times, color=colors[:len(algorithms)], edgecolor='black', width=0.6)
+# Gộp chú thích
+lines = [bars1, bars2, line[0]]
+labels = ['Thời gian (giây)', 'Độ dài đường đi', 'Số trạng thái duyệt']
+ax1.legend(lines, labels, loc='upper left', fontsize=11)
 
-# Tiêu đề và nhãn trục
-plt.title('So sánh thời gian thực hiện các thuật toán', fontsize=16, fontweight='bold')
-plt.xlabel('Thuật toán', fontsize=14)
-plt.ylabel('Thời gian (giây)', fontsize=14)
-
-# Hiển thị giá trị trên đỉnh cột
-for bar, time in zip(bars, times):
-    plt.text(bar.get_x() + bar.get_width() / 2,
-             bar.get_height() + max(times) * 0.01,
-             f'{time:.6f}',
-             ha='center', va='bottom',
-             fontsize=12, fontweight='bold', color='black')
-
-# Điều chỉnh trục
-plt.ylim(0, max(times) * 1.1)
-plt.xticks(rotation=45, ha='right', fontsize=12)
-plt.yticks(fontsize=12)
-
-# Thêm lưới ngang nhẹ
-plt.grid(axis='y', linestyle='--', alpha=0.6)
+plt.title('So sánh các thuật toán theo thời gian, trạng thái và độ dài đường đi', fontsize=16, fontweight='bold')
 plt.tight_layout()
-
-# Lưu biểu đồ
-plt.savefig('algorithm_comparison.png')
-plt.close()
+plt.savefig('PNG\\LocalSearch.png')
+plt.show()

@@ -27,7 +27,7 @@ from CSP.SeePartOfMatrix import solve_partial_8puzzle as SeePartOfMatrix
 from CSP.CSP_BackTracking import solve_csp_8puzzle as CSPBackTracking, print_board
 from Qlearing.QL import trainAstar as QLearning, solve as solve_QLearning, qTable
 from function.btns.drawMMenu import mainMenu
-from function.btns.drawFigure import drawFigures
+from function.btns.drawFigure import drawFigures,drawFiguresNoOb
 from function.animated.animation import animation
 
 pygame.init()
@@ -173,6 +173,142 @@ def runPuzzle(start, steps, path, WHITE, BLACK, WidthBoard, HeightBoard, squareS
     except Exception as e:
         print(f"Lỗi khi lưu animation: {e}")
         pygame.time.wait(2000)
+ 
+def runPuzzleNoOb(belief_list, path, WHITE, BLACK, WidthBoard, HeightBoard, squareSize, boardRows, boardCols, fontBoard, LineWidth):
+    num_boards = len(belief_list)
+    total_width = WidthBoard * num_boards
+    screenBoard = pygame.display.set_mode((total_width, HeightBoard))
+    FPS = 60
+    animating = False
+    index = 0
+    currentStep = 0
+    frames = []
+
+    output_dir = "animations"
+    os.makedirs(output_dir, exist_ok=True)
+
+    board_width = WidthBoard
+    squareSize = board_width // boardCols
+
+    # Khởi tạo vị trí cho từng bảng
+    positions = []
+    for i, belief in enumerate(belief_list):
+        belief_matrix = np.array(belief).reshape((boardRows, boardCols))
+        pos = {}
+        for row in range(boardRows):
+            for col in range(boardCols):
+                num = belief_matrix[row][col]
+                if num != 0:
+                    x = col * squareSize + squareSize // 2 + (i * board_width)
+                    y = row * squareSize + squareSize // 2
+                    pos[num] = (x, y)
+        positions.append(pos)
+
+    try:
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            screenBoard.fill(BLACK)
+
+            # Vẽ từng bảng với trạng thái hiện tại từ path
+            for i in range(num_boards):
+                # Lấy trạng thái từ path[index] nếu có, nếu không thì dùng belief_list
+                if index < len(path) and i < len(path[index]):
+                    belief_matrix = np.array(path[index][i]).reshape((boardRows, boardCols))
+                else:
+                    belief_matrix = np.array(belief_list[i]).reshape((boardRows, boardCols))
+                drawFiguresNoOb(
+                    screenBoard, fontBoard, positions[i], belief_matrix, WHITE, BLACK, boardRows, boardCols, squareSize,
+                    board_width, HeightBoard, LineWidth, offset_x=i * board_width
+                )
+
+            pygame.display.update()
+
+            # Animation
+            if not animating and index < len(path) - 1:
+                prePositions = positions.copy()
+                nextPositions = []
+                for i in range(num_boards):
+                    # Lấy trạng thái tiếp theo từ path[index + 1]
+                    if index + 1 < len(path) and i < len(path[index + 1]):
+                        belief = np.array(path[index + 1][i]).reshape((boardRows, boardCols))
+                    else:
+                        belief = np.array(belief_list[i]).reshape((boardRows, boardCols))
+                    belief_matrix = belief
+                    pos = {}
+                    for row in range(boardRows):
+                        for col in range(boardCols):
+                            num = belief_matrix[row][col]
+                            if num != 0:
+                                x = col * squareSize + squareSize // 2 + (i * board_width)
+                                y = row * squareSize + squareSize // 2
+                                pos[num] = (x, y)
+                    nextPositions.append(pos)
+                index += 1
+                animating = True
+
+            if animating:
+                steps = 10
+                currentStep += 1
+                if currentStep < steps:
+                    for i in range(num_boards):
+                        for num in prePositions[i]:
+                            x1, y1 = prePositions[i][num]
+                            x2, y2 = nextPositions[i].get(num, (x1, y1))  # Giữ nguyên nếu số không tồn tại
+                            newX = x1 + (x2 - x1) * (currentStep + 1) / steps
+                            newY = y1 + (y2 - y1) * (currentStep + 1) / steps
+                            positions[i][num] = (newX, newY)
+                else:
+                    positions = nextPositions.copy()
+                    animating = False
+                    currentStep = 0
+
+            # Vẽ lại với trạng thái hiện tại từ path
+            for i in range(num_boards):
+                if index < len(path) and i < len(path[index]):
+                    belief_matrix = np.array(path[index][i]).reshape((boardRows, boardCols))
+                else:
+                    belief_matrix = np.array(belief_list[i]).reshape((boardRows, boardCols))
+                drawFiguresNoOb(
+                    screenBoard, fontBoard, positions[i], belief_matrix, WHITE, BLACK, boardRows, boardCols, squareSize,
+                    board_width, HeightBoard, LineWidth, offset_x=i * board_width
+                )
+
+            frame = pygame.surfarray.array3d(screenBoard)
+            frame = np.transpose(frame, (1, 0, 2))
+            frames.append(frame)
+
+            pygame.display.flip()
+            pygame.time.Clock().tick(FPS)
+
+            if index >= len(path) - 1 and not animating:
+                output_path = os.path.join(output_dir, f"puzzle_animation_{algorithm}.gif")
+                imageio.mimsave(output_path, frames, fps=FPS)
+                print(f"Đã lưu GIF tại: {output_path}")
+                pygame.time.wait(2000)
+                break
+
+    except Exception as e:
+        print(f"Lỗi khi lưu animation: {e}")
+        pygame.time.wait(2000)
+        
+# Sửa đổi hàm drawFigures để hỗ trợ offset_x
+# def drawFigures(screen, font, position, tile_color, bg_color, boardRows, squareSize, WidthBoard, HeightBoard, LineWidth, offset_x=0):
+#     screen.fill(bg_color)
+#     for row in range(boardRows + 1):
+#         pygame.draw.line(screen, tile_color, (offset_x, row * squareSize), (offset_x + WidthBoard, row * squareSize), LineWidth)
+#     for col in range(boardRows + 1):
+#         pygame.draw.line(screen, tile_color, (offset_x + col * squareSize, 0), (offset_x + col * squareSize, HeightBoard), LineWidth)
+
+#     for num, (x, y) in position.items():
+#         if num != 0:
+#             text = font.render(str(num), True, tile_color)
+#             text_rect = text.get_rect(center=(x, y))
+#             screen.blit(text, text_rect)
+
 
 def main():
     global screen, algorithm
@@ -303,6 +439,10 @@ def main():
             timeTaken = timeit.timeit(lambda: AStarNoOb(listStart, end), number=1)
             save_result_to_file("KetQua.txt", algorithm, timeTaken, path, spaceState)
             log_selection_to_file("Selections.json", algorithm, timeTaken, path, spaceState)
+            if path is not None and len(path) > 0:
+                runPuzzleNoOb(listStart, path, WHITE, BLACK, WidthBoard, HeightBoard, squareSize, boardRows, boardCols, fontBoard, LineWidth)
+            else:
+                print("Không tìm thấy đường đi cho NoOb.")
         
         elif algorithm == "SeePartOfMatrix":
             start = [[2, '?', '?'], ['?', 8, '?'], ['?', '?', 1]]
@@ -333,9 +473,17 @@ def main():
             print("Ko dung")
             return
         
-        running = True
         if algorithm != "NoOb":
             runPuzzle(start, 10, path, WHITE, BLACK, WidthBoard, HeightBoard, squareSize, boardRows, boardCols, fontBoard, LineWidth)
+            
+        # if algorithm == "NoOb":
+        #     listStart = BeliefList(5)
+        #     end = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
+        #     path, spaceState = AStarNoOb(listStart, end)
+        #     timeTaken = timeit.timeit(lambda: AStarNoOb(listStart, end), number=1)
+        #     save_result_to_file("KetQua.txt", algorithm, timeTaken, path, spaceState)
+        #     log_selection_to_file("Selections.json", algorithm, timeTaken, path, spaceState)
+        #     runPuzzleNoOb(listStart, path, WHITE, BLACK, WidthBoard, HeightBoard, squareSize, boardRows, boardCols, fontBoard, LineWidth)
 
 if __name__ == "__main__":
     main()
