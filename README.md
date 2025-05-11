@@ -54,7 +54,7 @@ IDDFS|Có|Có (nếu chi phí đồng nhất)|O(𝑏^𝑑)|O(bd)|Giải pháp n�
 
 
 ### So sánh thời gian chạy
-<img src="PNG/InformedSearch.png" alt="InformedSearch" width="400" style="display: block; margin: 30 auto;" >
+<img src="PNG/Informed.png" alt="InformedSearch" width="400" style="display: block; margin: 30 auto;" >
 
 
 ### Nhận xét
