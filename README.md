@@ -165,5 +165,5 @@ IDDFS|Có|Có (nếu chi phí đồng nhất)|O(𝑏^𝑑)|O(bd)|Giải pháp n�
 - **b**: Hệ số phân nhánh (số trạng thái kế tiếp trung bình).
 - **d**: Độ sâu của lời giải.
 
-## 3. Kết luận
+# 3. Kết luận
 Áp dụng thuật toán của sáu nhóm thuật toán thành công nhưng một số cách viết có thể không thể tìm ra đáp án do môi trường không ổn định, có thể môi trường sẽ khó vẽ do cách vẽ màn hình.
