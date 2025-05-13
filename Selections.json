@@ -16,5 +16,17 @@
         "execution_time": 29.543565100000706,
         "states_explored": 1712,
         "path_length": 24
+    },
+    {
+        "algorithm": "BFS",
+        "execution_time": 0.0005484999855980277,
+        "states_explored": 8,
+        "path_length": 3
+    },
+    {
+        "algorithm": "DFS",
+        "execution_time": 0.02549549995455891,
+        "states_explored": 441,
+        "path_length": 435
     }
 ]
