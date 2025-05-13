@@ -167,3 +167,4 @@ IDDFS|Có|Có (nếu chi phí đồng nhất)|O(𝑏^𝑑)|O(bd)|Giải pháp n�
 
 # 3. Kết luận
 Áp dụng thuật toán của sáu nhóm thuật toán thành công nhưng một số cách viết có thể không thể tìm ra đáp án do môi trường không ổn định, có thể môi trường sẽ khó vẽ do cách vẽ màn hình.
+https://github.com/reality8080/AI_Project_Personal.git
